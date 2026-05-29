@@ -33,6 +33,16 @@ Traceloop.init(
 Step 4: Ensure Cloud Trace API is enabled for your project
 <img src="./assets/api_trace.png" alt="Leila Wolfe" width="800" style="border-radius: 100%;"/>
 
+Step 5: Run your python app
+```
+uv run main.py
+```
+
+or if using a cloud run job, execute the job
+```
+gcloud run jobs execute LLM_APP_JOB_NAME
+```
+
 ## References
 * [Google Cloud Observability Docs](https://docs.cloud.google.com/stackdriver/docs)
 * [OpenLLMetry Docs](https://github.com/traceloop/openllmetry)
