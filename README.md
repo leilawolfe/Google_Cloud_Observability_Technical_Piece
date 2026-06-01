@@ -11,10 +11,12 @@ Tools:
 You have your Python LLM project managed by uv ready to go. Now we need to step up observability and tracing for all your LLM calls
 
 Step 1: Install OpenLLMetry using uv
+
 `uv add traceloop-sdk`
 
 Step 2: Install Google OpenTelemtry Exporter
 Since we are using Google Cloud Trace, we do not need to set any Traceloop environment variables. We can instead install the google open telemetry exporter - which OpenLLMetry will automatically detect
+
 `uv add opentelemetry-exporter-gcp-trace`
 
 Step 3: Initialize Traceloop in Your Code
@@ -33,7 +35,9 @@ Traceloop.init(
 Step 4: Ensure Cloud Trace API is enabled for your project
 <img src="./assets/api_trace.png" alt="Leila Wolfe" width="800" style="border-radius: 100%;"/>
 
-Step 5: Run your python app
+Step 5: Enable Trace Storage
+
+Step 6: Run your python app
 ```
 uv run main.py
 ```
