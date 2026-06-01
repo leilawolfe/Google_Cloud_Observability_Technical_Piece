@@ -71,6 +71,6 @@ Step 8: View Traces in Trace Explorer
 <img src="./assets/metadata_llm.png" alt="view llm traces" width="800" style="border-radius: 100%;"/>
 
 ## References
-* [Traceloop GCP Integration Docs](https://www.traceloop.com/docs/openllmetry/integrations/gcp)
+* [OpenLLMetry GCP Integration Docs](https://www.traceloop.com/docs/openllmetry/integrations/gcp)
 * [OpenLLMetry Docs](https://github.com/traceloop/openllmetry)
 * [Google Cloud Observability Docs](https://docs.cloud.google.com/stackdriver/docs)
