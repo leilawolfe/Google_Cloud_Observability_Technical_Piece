@@ -1,4 +1,4 @@
-# Google Cloud Observability and OpenLLMetry Deep-Dive (UNFINISHED)
+# OpenLLMetry and Google Cloud Platform Integration Tutorial (UNFINISHED)
 ## Introduction
 LLMs can be costly and can be prone to hallucinations. Best to monitor token usage, model drift, and cost.
 
@@ -43,9 +43,10 @@ Traceloop.init(
 ```
 
 Step 4: Ensure Cloud Trace API is enabled for your project
-<img src="./assets/api_trace.png" alt="Leila Wolfe" width="800" style="border-radius: 100%;"/>
+<img src="./assets/api_trace.png" alt="api trace ui screenshot" width="800" style="border-radius: 100%;"/>
 
 Step 5: Enable Trace Storage (the option should be available in the Trace explorer UI)
+<img src="./assets/enable_cloud_trace_storage.png" alt="enable cloud trace storage" width="800" style="border-radius: 100%;"/>
 
 Step 6: Ensure your service account has all required roles (if using GCP). Some may include:
 * Cloud Telemetry Metric Writer
@@ -64,6 +65,12 @@ or if using a cloud run job, execute the job
 gcloud run jobs execute LLM_APP_JOB_NAME
 ```
 
+Step 8: View Traces in Trace Explorer
+<img src="./assets/capturing_trace.png" alt="view cloud traces" width="800" style="border-radius: 100%;"/>
+
+<img src="./assets/metadata_llm.png" alt="view llm traces" width="800" style="border-radius: 100%;"/>
+
 ## References
-* [Google Cloud Observability Docs](https://docs.cloud.google.com/stackdriver/docs)
+* [Traceloop GCP Integration Docs](https://www.traceloop.com/docs/openllmetry/integrations/gcp)
 * [OpenLLMetry Docs](https://github.com/traceloop/openllmetry)
+* [Google Cloud Observability Docs](https://docs.cloud.google.com/stackdriver/docs)
