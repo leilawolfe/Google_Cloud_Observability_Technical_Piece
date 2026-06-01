@@ -1,6 +1,24 @@
 # OpenLLMetry and Google Cloud Platform Integration Tutorial (UNFINISHED)
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center" valign="center">
+        <img src="https://raw.githubusercontent.com/traceloop/openllmetry/main/img/logo-dark.png" alt="OpenLLMetry Logo" width="180"/>
+      </td>
+      <td align="center" valign="center" style="font-size: 24px; font-weight: bold; padding: 0 20px;">
+        +
+      </td>
+      <td align="center" valign="center">
+        <img src="https://www.gstatic.com/cgc/google-cloud-logo.svg" alt="Google Cloud Platform Logo" width="180"/>
+      </td>
+    </tr>
+  </table>
+</div>
+
 ## Introduction
-LLMs can be costly and can be prone to hallucinations. Best to monitor token usage, model drift, and cost.
+Setting up observability is crucial for efficient troubleshoot, cost optimization, and code efficiency your applications. This is new different for applications that utilize LLMs. Fortunately, [OpenTelemetry](https://opentelemetry.io/) developed an observability framework specifically for AI use cases - [OpenLLMetry](https://github.com/traceloop/openllmetry). 
+LLMs can be costly and can be prone to hallucinations. Best to monitor token usage, model drift, and cost. 
 
 Tools:
 * OpenLLMetry
@@ -28,7 +46,7 @@ opentelemetry-exporter-gcp-logging \
 traceloop-sdk
 ```
 
-#### **Step 3**: Initialize Traceloop in Your Code
+#### **Step 3**: Import Traceloop and Relevant in Your Code
 Add the following code to the entry point of your script. In this case, I added it to the top of my main.py file.
 You will want to add an import statement
 ```python
@@ -37,7 +55,9 @@ from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.exporter.cloud_monitoring import CloudMonitoringMetricsExporter
 from opentelemetry.exporter.cloud_logging import CloudLoggingExporter
 ```
-and an initialization call
+#### **Step 4**: Initialize Traceloop in Your Code
+Add the following code to the entry point of your script. In this case, I added it to the top of my main.py file.
+You will want to add an initialization call
 ```python
 trace_exporter = CloudTraceSpanExporter()
 metrics_exporter = CloudMonitoringMetricsExporter
@@ -51,20 +71,20 @@ Traceloop.init(
 )
 ```
 
-#### **Step 4**: Ensure Cloud Trace API is enabled for your project
+#### **Step 5**: Ensure Cloud Trace API is enabled for your project
 <img src="./assets/api_trace.png" alt="api trace ui screenshot" width="800" style="border-radius: 100%;"/>
 
-#### **Step 5**: Enable Trace Storage (the option should be available in the Trace explorer UI)
+#### **Step 6**: Enable Trace Storage (the option should be available in the Trace explorer UI)
 <img src="./assets/enable_cloud_trace_storage.png" alt="enable cloud trace storage" width="800" style="border-radius: 100%;"/>
 
-#### **Step 6**: Ensure your service account has all required roles (if using GCP). Some may include:
+#### **Step 7**: Ensure your service account has all required roles (if using GCP). Some may include:
 * Cloud Telemetry Metric Writer
 * Cloud Trace Agent
 * Cloud Trace User
 * Logs Writer
 * Monitoring Editor
 
-#### **Step 7**: Run your python app
+#### **Step 8**: Run your python app
 ```bash
 uv run main.py
 ```
@@ -74,10 +94,10 @@ or if using a cloud run job, execute the job
 gcloud run jobs execute LLM_APP_JOB_NAME
 ```
 
-#### **Step 8**: View Traces in Trace Explorer
+#### **Step 9**: View Traces in Trace Explorer
 <img src="./assets/capturing_trace.png" alt="view cloud traces" width="800" style="border-radius: 100%;"/>
 
-If you click on one of the trace spans, you can view more metrics! In the following example, I can see the prompt, token count, and other metadata passed to the gemini model api call.
+If you click on one of the trace spans, you can view the recorded metrics. In the following example, I can see the prompt, token count, and other metadata passed to the gemini model api call.
 
 <img src="./assets/metadata_llm.png" alt="view llm traces" width="800" style="border-radius: 100%;"/>
 
