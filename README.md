@@ -24,20 +24,37 @@ Generally, you will want to add the following lines of code wherever you make a 
 You will want to add an import statement
 ```
 from traceloop.sdk import Traceloop
+from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.exporter.cloud_monitoring import CloudMonitoringMetricsExporter
+from opentelemetry.exporter.cloud_logging import CloudLoggingExporter
 ```
 and an initialization call
 ```
+trace_exporter = CloudTraceSpanExporter()
+metrics_exporter = CloudMonitoringMetricsExporter
+logs_exporter = CloudLoggingExporter()
+
 Traceloop.init(
   app_name="your-app-service",
+  exporter=trace_exporter,
+  metrics_exporter=metrics_exporter,
+  logging_exporter=logs_exporter
 )
 ```
 
 Step 4: Ensure Cloud Trace API is enabled for your project
 <img src="./assets/api_trace.png" alt="Leila Wolfe" width="800" style="border-radius: 100%;"/>
 
-Step 5: Enable Trace Storage
+Step 5: Enable Trace Storage (the option should be available in the Trace explorer UI)
 
-Step 6: Run your python app
+Step 6: Ensure your service account has all required roles (if using GCP). Some may include:
+* Cloud Telemetry Metric Writer
+* Cloud Trace Agent
+* Cloud Trace User
+* Logs Writer
+* Monitoring Editor
+
+Step 7: Run your python app
 ```
 uv run main.py
 ```
