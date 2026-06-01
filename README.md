@@ -5,6 +5,7 @@ LLMs can be costly and can be prone to hallucinations. Best to monitor token usa
 Tools:
 * OpenLLMetry
 * Google Cloud Trace Explorer
+* Python
 * Gemini 3.1 Flash Lite
 
 ## Tutorial 
@@ -12,17 +13,19 @@ You have your Python LLM project managed by uv ready to go. Now we need to step 
 
 #### **Step 1**: Install OpenLLMetry using uv
 
-`uv add traceloop-sdk`
+```bash
+uv add traceloop-sdk
+```
 
 #### **Step 2**: Install Google OpenTelemtry Exporter
 Since we are using Google Cloud Trace, we do not need to set any Traceloop environment variables. We can instead install the google open telemetry exporter - which OpenLLMetry will automatically detect
 
-```shell
-  uv add \
-  opentelemetry-exporter-gcp-trace \
-  opentelemetry-exporter-gcp-monitoring \
-  opentelemetry-exporter-gcp-logging \
-  traceloop-sdk
+```bash
+uv add \
+opentelemetry-exporter-gcp-trace \
+opentelemetry-exporter-gcp-monitoring \
+opentelemetry-exporter-gcp-logging \
+traceloop-sdk
 ```
 
 #### **Step 3**: Initialize Traceloop in Your Code
@@ -62,12 +65,12 @@ Traceloop.init(
 * Monitoring Editor
 
 #### **Step 7**: Run your python app
-```shell
+```bash
 uv run main.py
 ```
 
 or if using a cloud run job, execute the job
-```shell
+```bash
 gcloud run jobs execute LLM_APP_JOB_NAME
 ```
 
@@ -77,6 +80,21 @@ gcloud run jobs execute LLM_APP_JOB_NAME
 If you click on one of the trace spans, you can view more metrics! In the following example, I can see the prompt, token count, and other metadata passed to the gemini model api call.
 
 <img src="./assets/metadata_llm.png" alt="view llm traces" width="800" style="border-radius: 100%;"/>
+
+### Configuring OpenLLMetry
+Configuring OpenLLMetry can be accomplished by setting environment variables in your Python code. One reason you may want set a variable is to ensure rate limits are not surpassed. For example, if the GCP Monitoring API receives more requests than the minimum sampling window, the calls will throw an error. One way to circumvent this errors is by enabling metric aggregation with the OTEL_METRIC_EXPORT_INTERVAL
+
+```python
+import os
+os.environ["OTEL_METRIC_EXPORT_INTERVAL"] = "60000"
+```
+
+Other useful environment variables include
+| Variable | ----|
+|---|----|
+OTEL_TRACES_SAMPLER |  defines how traces are sampled |
+OTEL_TRACES_SAMPLER_ARG | will export a random sample of traces. set as a fraction |
+OTEL_BSP_EXPORT_TIMEOUT | maximum time (ms) allowed for a trace batch to export before failing
 
 ## References
 * [OpenLLMetry GCP Integration Docs](https://www.traceloop.com/docs/openllmetry/integrations/gcp)
