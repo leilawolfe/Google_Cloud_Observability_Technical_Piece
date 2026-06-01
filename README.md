@@ -70,6 +70,46 @@ Traceloop.init(
 )
 ```
 
+Here is a an example of what the module could look like
+
+```python
+import os
+from google import genai # Clarifies the Gemini tool mentioned
+from traceloop.sdk import Traceloop
+from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.exporter.cloud_monitoring import CloudMonitoringMetricsExporter
+from opentelemetry.exporter.cloud_logging import CloudLoggingExporter
+
+# Fix rate limit sampling errors for GCP Monitoring API
+os.environ["OTEL_METRIC_EXPORT_INTERVAL"] = "60000"
+
+# Initialize exporters with proper instantiation
+trace_exporter = CloudTraceSpanExporter()
+metrics_exporter = CloudMonitoringMetricsExporter()
+logs_exporter = CloudLoggingExporter()
+
+# Initialize Traceloop
+Traceloop.init(
+    app_name="gemini-observability-service",
+    exporter=trace_exporter,
+    metrics_exporter=metrics_exporter,
+    logging_exporter=logs_exporter
+)
+
+  def generate(prompt:str, model_name:str='gemini-3.1-flash-lite')-> str:
+    client = genai.Client()
+    response = client.models.generate_content(
+        model=model_name, # Updated for production stability
+        contents=prompt,
+    )
+    return response.text
+
+if __name__ == "__main__":
+  prompt = "assess the importance of writing a tutorial on observability for llm applications"
+  generate(prompt)
+
+```
+
 #### **Step 5**: Ensure Cloud Trace API is enabled for your project
 <img src="./assets/api_trace.png" alt="api trace ui screenshot" width="800" style="border-radius: 100%;"/>
 
@@ -85,7 +125,7 @@ Traceloop.init(
 
 #### **Step 8**: Set up necessary GCP API Keys or use `gcloud auth`
 
-#### **Step 8**: Run your python app
+#### **Step 9**: Run your python app
 ```bash
 uv run main.py
 ```
@@ -95,7 +135,7 @@ or if using a cloud run job, execute the job
 gcloud run jobs execute LLM_APP_JOB_NAME
 ```
 
-#### **Step 9**: View Traces in Trace Explorer
+#### **Step 10**: View Traces in Trace Explorer
 <img src="./assets/capturing_trace.png" alt="view cloud traces" width="800" style="border-radius: 100%;"/>
 
 If you click on one of the trace spans, you can view the recorded metrics. In the following example, I can see the prompt, token count, and other metadata passed to the gemini model api call.
