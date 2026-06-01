@@ -4,7 +4,7 @@ LLMs can be costly and can be prone to hallucinations. Best to monitor token usa
 
 Tools:
 * OpenLLMetry
-* Google Cloud Observability
+* Google Cloud Trace Explorer
 * Gemini 3.1 Flash Lite
 
 ## Connection 
@@ -20,7 +20,7 @@ Since we are using Google Cloud Trace, we do not need to set any Traceloop envir
 `uv add opentelemetry-exporter-gcp-trace`
 
 Step 3: Initialize Traceloop in Your Code
-Generally, you will want to add the following lines of code wherever you make a generate_content() call to a gemini model
+Add the following code to the entry point of your script. In this case, I added it to the top of my main.py file.
 You will want to add an import statement
 ```
 from traceloop.sdk import Traceloop
@@ -67,6 +67,8 @@ gcloud run jobs execute LLM_APP_JOB_NAME
 
 Step 8: View Traces in Trace Explorer
 <img src="./assets/capturing_trace.png" alt="view cloud traces" width="800" style="border-radius: 100%;"/>
+
+If you click on one of the trace spans, you can view more metrics! In the following example, I can see the prompt, token count, and other metadata passed to the gemini model api call.
 
 <img src="./assets/metadata_llm.png" alt="view llm traces" width="800" style="border-radius: 100%;"/>
 
