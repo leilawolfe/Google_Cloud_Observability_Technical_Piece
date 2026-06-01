@@ -17,14 +17,14 @@
 </div>
 
 ## Introduction
-Setting up observability is crucial for efficient troubleshoot, cost optimization, and code efficiency your applications. This is new different for applications that utilize LLMs. Fortunately, [OpenTelemetry](https://opentelemetry.io/) developed an observability framework specifically for AI use cases - [OpenLLMetry](https://github.com/traceloop/openllmetry). 
-LLMs can be costly and can be prone to hallucinations. Best to monitor token usage, model drift, and cost. 
+Setting up observability is crucial for efficient troubleshoot, cost optimization, and code efficiency your applications. This is no different for applications that utilize LLMs. Fortunately, [OpenTelemetry](https://opentelemetry.io/) developed an observability framework specifically for AI use cases - [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry has multiple integrations available for use. In this guide, we will learn how to set up OpenLLMetry in your LLM Python application.
 
 Tools:
 * OpenLLMetry
 * Google Cloud Trace Explorer
 * Python
 * Gemini 3.1 Flash Lite
+* Uv
 
 ## Tutorial 
 You have your Python LLM project managed by uv ready to go. Now we need to step up observability and tracing for all your LLM calls
@@ -43,7 +43,6 @@ uv add \
 opentelemetry-exporter-gcp-trace \
 opentelemetry-exporter-gcp-monitoring \
 opentelemetry-exporter-gcp-logging \
-traceloop-sdk
 ```
 
 #### **Step 3**: Import Traceloop and Relevant in Your Code
@@ -60,7 +59,7 @@ Add the following code to the entry point of your script. In this case, I added 
 You will want to add an initialization call
 ```python
 trace_exporter = CloudTraceSpanExporter()
-metrics_exporter = CloudMonitoringMetricsExporter
+metrics_exporter = CloudMonitoringMetricsExporter()
 logs_exporter = CloudLoggingExporter()
 
 Traceloop.init(
@@ -83,6 +82,8 @@ Traceloop.init(
 * Cloud Trace User
 * Logs Writer
 * Monitoring Editor
+
+#### **Step 8**: Set up necessary GCP API Keys or use `gcloud auth`
 
 #### **Step 8**: Run your python app
 ```bash
@@ -110,8 +111,8 @@ os.environ["OTEL_METRIC_EXPORT_INTERVAL"] = "60000"
 ```
 
 Other useful environment variables include
-| Variable | ----|
-|---|----|
+| Variable | Description |
+|   ---    |     -----   |
 OTEL_TRACES_SAMPLER |  defines how traces are sampled |
 OTEL_TRACES_SAMPLER_ARG | will export a random sample of traces. set as a fraction |
 OTEL_BSP_EXPORT_TIMEOUT | maximum time (ms) allowed for a trace batch to export before failing
