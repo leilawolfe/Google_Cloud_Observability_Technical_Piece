@@ -22,11 +22,11 @@
 </div>
 
 ## Introduction
-Setting up observability is crucial for quick troubleshooting, cost optimization, and code efficiency of your applications. This is no different for applications that utilize LLMs. Fortunately, [OpenTelemetry](https://opentelemetry.io/) developed an extension that serves as an observability framework specifically for AI use cases - [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry offers integrations for many observability platforms. In this guide, we will learn how to set up OpenLLMetry in your LLM Python application running on Google Cloud Platform.
+Setting up observability is crucial for quick troubleshooting, cost optimization, and code efficiency of your applications. This is no different for applications that utilize LLMs. Fortunately, [OpenTelemetry](https://opentelemetry.io/) developed an extension that serves as an observability framework specifically for AI use cases - [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry offers integrations for many observability platforms such as LangFuse, TraceLoop and Google Cloud Observability (Cloud Trace, Cloud Monitoring, Cloud Logging). In this guide, we will learn how to set up OpenLLMetry in your LLM Python application running on Google Cloud Platform.
 
 Tools:
 * OpenLLMetry
-* Google Cloud Trace Explorer
+* Google Cloud Trace
 * Python
 * Gemini 3.1 Flash Lite
 * uv
@@ -87,7 +87,7 @@ Traceloop.init(
   <figcaption><em>Figure 1: Cloud Trace API on APIS & Services UI</em></figcaption>
 </figure>
 
-#### **Step 6**: Enable Trace Storage (the option should be available in the Trace explorer UI)
+#### **Step 6**: Enable Trace Storage (the option should be available in the Cloud Trace UI)
 <figure align="center">
   <img src="./assets/enable_cloud_trace_storage.png" alt="enable cloud trace storage" width="800"/>
   <figcaption><em>Figure 2: Message After Successfully Enabling Cloud Trace Storage</em></figcaption>
@@ -116,10 +116,10 @@ or if using a cloud run job, execute the job
 gcloud run jobs execute LLM_APP_JOB_NAME
 ```
 
-#### **Step 10**: View Traces in Trace Explorer
+#### **Step 10**: View Traces in Cloud Trace
 <figure align="center">
   <img src="./assets/capturing_trace.png" alt="view cloud traces" width="800"/>
-  <figcaption><em>Figure 3: Viewing Trace Explorer UI</em></figcaption>
+  <figcaption><em>Figure 3: Viewing Cloud Trace UI</em></figcaption>
 </figure>
 <br>
 <br>
@@ -128,7 +128,7 @@ If you click on one of the trace spans, you can view the recorded metrics. Figur
 
 <figure align="center">
   <img src="./assets/metadata_llm.png" alt="view llm traces" width="800"/>
-  <figcaption><em>Figure 4: Viewing token usage and prompt metadata within a Trace Explorer span</em></figcaption>
+  <figcaption><em>Figure 4: Viewing token usage and prompt metadata within a trace span</em></figcaption>
 </figure>
 
 ### Configuring OpenLLMetry
