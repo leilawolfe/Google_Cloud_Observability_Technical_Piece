@@ -1,4 +1,4 @@
-# OpenLLMetry and Google Cloud Platform Integration Tutorial (UNFINISHED)
+# OpenLLMetry and Google Cloud Platform Integration Tutorial
 
 <div align="center">
   <table>
@@ -17,14 +17,20 @@
 </div>
 
 ## Introduction
-Setting up observability is crucial for efficient troubleshoot, cost optimization, and code efficiency your applications. This is no different for applications that utilize LLMs. Fortunately, [OpenTelemetry](https://opentelemetry.io/) developed an observability framework specifically for AI use cases - [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry has multiple integrations available for use. In this guide, we will learn how to set up OpenLLMetry in your LLM Python application.
+Setting up observability is crucial for quick troubleshooting, cost optimization, and code efficiency of your applications. This is no different for applications that utilize LLMs. Fortunately, [OpenTelemetry](https://opentelemetry.io/) developed an observability framework specifically for AI use cases - [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry has multiple integrations available for use. In this guide, we will learn how to set up OpenLLMetry in your LLM Python application.
 
 Tools:
 * OpenLLMetry
 * Google Cloud Trace Explorer
 * Python
 * Gemini 3.1 Flash Lite
-* Uv
+* uv
+
+## Prerequisites
+Before starting this tutorial, ensure you have:
+* A Google Cloud project with billing enabled.
+* The Google Cloud CLI (`gcloud`) installed and initialized.
+* An existing `uv` Python project with your LLM application logic and the `google-genai` package already configured.
 
 ## Tutorial 
 You have your Python LLM project managed by uv ready to go. Now we need to step up observability and tracing for all your LLM calls
@@ -35,17 +41,17 @@ You have your Python LLM project managed by uv ready to go. Now we need to step 
 uv add traceloop-sdk
 ```
 
-#### **Step 2**: Install Google OpenTelemtry Exporter
-Since we are using Google Cloud Trace, we do not need to set any Traceloop environment variables. We can instead install the google open telemetry exporter - which OpenLLMetry will automatically detect
+#### **Step 2**: Install Google Open Telemetry Exporter
+Since we are using Google Cloud Trace, we do not need to set any Traceloop environment variables. We can instead install the Google Open Telemetry Exporter - which OpenLLMetry will automatically detect
 
 ```bash
 uv add \
 opentelemetry-exporter-gcp-trace \
 opentelemetry-exporter-gcp-monitoring \
-opentelemetry-exporter-gcp-logging \
+opentelemetry-exporter-gcp-logging
 ```
 
-#### **Step 3**: Import Traceloop and Relevant in Your Code
+#### **Step 3**: Import All Relevant Modules
 Add the following code to the entry point of your script. In this case, I added it to the top of my main.py file.
 You will want to add an import statement
 ```python
@@ -70,17 +76,70 @@ Traceloop.init(
 )
 ```
 
-Here is a an example of what the module could look like
+#### **Step 5**: Ensure Cloud Trace API is enabled for your project
+<img src="./assets/api_trace.png" alt="api trace ui screenshot" width="800"/>
+
+#### **Step 6**: Enable Trace Storage (the option should be available in the Trace explorer UI)
+<img src="./assets/enable_cloud_trace_storage.png" alt="enable cloud trace storage" width="800"/>
+
+#### **Step 7**: Ensure your service account has all required roles (if using GCP). Some may include:
+* Cloud Telemetry Metric Writer
+* Cloud Trace Agent
+* Cloud Trace User
+* Logs Writer
+* Monitoring Editor
+
+#### **Step 8**: Set up necessary GCP API Keys or use gcloud auth
+Google Cloud Platform requires API keys provided as environment variables or proper authentication when using GCP services locally. One way to login is to run the following command in your terminal:
+```bash
+gcloud auth application-default login
+```
+
+#### **Step 9**: Run your python app
+```bash
+uv run main.py
+```
+
+or if using a cloud run job, execute the job
+```bash
+gcloud run jobs execute LLM_APP_JOB_NAME
+```
+
+#### **Step 10**: View Traces in Trace Explorer
+<img src="./assets/capturing_trace.png" alt="view cloud traces" width="800"/>
+
+If you click on one of the trace spans, you can view the recorded metrics. In the following example, I can see the prompt, token count, and other metadata passed to the gemini model api call.
+
+<img src="./assets/metadata_llm.png" alt="view llm traces" width="800"/>
+
+### Configuring OpenLLMetry
+Configuring OpenLLMetry can be accomplished by setting environment variables in your Python code. One reason you may want set a variable is to ensure rate limits are not surpassed. For example, if the GCP Monitoring API receives more requests than the minimum sampling window, the calls will throw an error. One way to circumvent these errors is by enabling metric aggregation with the OTEL_METRIC_EXPORT_INTERVAL
 
 ```python
 import os
-from google import genai # Clarifies the Gemini tool mentioned
+os.environ["OTEL_METRIC_EXPORT_INTERVAL"] = "60000"
+```
+
+Other useful environment variables include:
+
+| Variable | Description |
+| :--- | :--- |
+| `OTEL_TRACES_SAMPLER` | Defines how traces are sampled.<br/>Options include: `always_on`, `always_off`, or `parentbased_always_on`. |
+| `OTEL_TRACES_SAMPLER_ARG` | Exports a random sample of traces.<br/>Set this value as a fraction between `0.0` and `1.0`. |
+| `OTEL_BSP_EXPORT_TIMEOUT` | The maximum time (in milliseconds) allowed for a trace batch to export before failing. |
+
+### Let's Put It All Together!
+Here is a an example of what the module could look like:
+
+```python
+import os
+from google import genai
 from traceloop.sdk import Traceloop
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.exporter.cloud_monitoring import CloudMonitoringMetricsExporter
 from opentelemetry.exporter.cloud_logging import CloudLoggingExporter
 
-# Fix rate limit sampling errors for GCP Monitoring API
+# Configure rate limit sampling to prevent errors with GCP Monitoring API
 os.environ["OTEL_METRIC_EXPORT_INTERVAL"] = "60000"
 
 # Initialize exporters with proper instantiation
@@ -96,7 +155,7 @@ Traceloop.init(
     logging_exporter=logs_exporter
 )
 
-  def generate(prompt:str, model_name:str='gemini-3.1-flash-lite')-> str:
+  def generate(prompt: str, model_name: str = 'gemini-3.1-flash-lite') -> str:
     client = genai.Client()
     response = client.models.generate_content(
         model=model_name, # Updated for production stability
@@ -106,56 +165,20 @@ Traceloop.init(
 
 if __name__ == "__main__":
   prompt = "assess the importance of writing a tutorial on observability for llm applications"
-  generate(prompt)
+  response = generate(prompt)
+  print(response)
 
 ```
 
-#### **Step 5**: Ensure Cloud Trace API is enabled for your project
-<img src="./assets/api_trace.png" alt="api trace ui screenshot" width="800" style="border-radius: 100%;"/>
+### Verifying Success
+When you run the script, Traceloop will output initialization logs to your terminal, followed by the Gemini response:
 
-#### **Step 6**: Enable Trace Storage (the option should be available in the Trace explorer UI)
-<img src="./assets/enable_cloud_trace_storage.png" alt="enable cloud trace storage" width="800" style="border-radius: 100%;"/>
-
-#### **Step 7**: Ensure your service account has all required roles (if using GCP). Some may include:
-* Cloud Telemetry Metric Writer
-* Cloud Trace Agent
-* Cloud Trace User
-* Logs Writer
-* Monitoring Editor
-
-#### **Step 8**: Set up necessary GCP API Keys or use `gcloud auth`
-
-#### **Step 9**: Run your python app
-```bash
-uv run main.py
+```text
+Traceloop exporting traces to custom exporter
+Traceloop exporting metrics to a custom exporter
+Observability in LLM applications is vital because it allows developers to track non-deterministic model behaviors, monitor token costs, and debug latency bottlenecks in real-time.
 ```
 
-or if using a cloud run job, execute the job
-```bash
-gcloud run jobs execute LLM_APP_JOB_NAME
-```
-
-#### **Step 10**: View Traces in Trace Explorer
-<img src="./assets/capturing_trace.png" alt="view cloud traces" width="800" style="border-radius: 100%;"/>
-
-If you click on one of the trace spans, you can view the recorded metrics. In the following example, I can see the prompt, token count, and other metadata passed to the gemini model api call.
-
-<img src="./assets/metadata_llm.png" alt="view llm traces" width="800" style="border-radius: 100%;"/>
-
-### Configuring OpenLLMetry
-Configuring OpenLLMetry can be accomplished by setting environment variables in your Python code. One reason you may want set a variable is to ensure rate limits are not surpassed. For example, if the GCP Monitoring API receives more requests than the minimum sampling window, the calls will throw an error. One way to circumvent this errors is by enabling metric aggregation with the OTEL_METRIC_EXPORT_INTERVAL
-
-```python
-import os
-os.environ["OTEL_METRIC_EXPORT_INTERVAL"] = "60000"
-```
-
-Other useful environment variables include
-| Variable | Description |
-|   ---    |     -----   |
-OTEL_TRACES_SAMPLER |  defines how traces are sampled |
-OTEL_TRACES_SAMPLER_ARG | will export a random sample of traces. set as a fraction |
-OTEL_BSP_EXPORT_TIMEOUT | maximum time (ms) allowed for a trace batch to export before failing
 
 ## References
 * [OpenLLMetry GCP Integration Docs](https://www.traceloop.com/docs/openllmetry/integrations/gcp)
