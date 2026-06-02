@@ -77,10 +77,16 @@ Traceloop.init(
 ```
 
 #### **Step 5**: Ensure Cloud Trace API is enabled for your project
-<img src="./assets/api_trace.png" alt="api trace ui screenshot" width="800"/>
+<figure align="center">
+  <img src="./assets/api_trace.png" alt="api trace ui screenshot" width="800"/>
+  <figcaption><em>Figure 1: Cloud Trace API on APIS & Services UI</em></figcaption>
+</figure>
 
 #### **Step 6**: Enable Trace Storage (the option should be available in the Trace explorer UI)
-<img src="./assets/enable_cloud_trace_storage.png" alt="enable cloud trace storage" width="800"/>
+<figure align="center">
+  <img src="./assets/enable_cloud_trace_storage.png" alt="enable cloud trace storage" width="800"/>
+  <figcaption><em>Figure 2: Message After Successfully Enabling Cloud Trace Storage</em></figcaption>
+</figure>
 
 #### **Step 7**: Ensure your service account has all required roles (if using GCP). Some may include:
 * Cloud Telemetry Metric Writer
@@ -106,14 +112,22 @@ gcloud run jobs execute LLM_APP_JOB_NAME
 ```
 
 #### **Step 10**: View Traces in Trace Explorer
-<img src="./assets/capturing_trace.png" alt="view cloud traces" width="800"/>
+<figure align="center">
+  <img src="./assets/capturing_trace.png" alt="view cloud traces" width="800"/>
+  <figcaption><em>Figure 3: Viewing Trace Explorer UI</em></figcaption>
+</figure>
+<br>
+<br>
 
-If you click on one of the trace spans, you can view the recorded metrics. In the following example, I can see the prompt, token count, and other metadata passed to the gemini model api call.
+If you click on one of the trace spans, you can view the recorded metrics. Figure 4. shows the prompt, token count, and other metadata passed to the gemini model api call.
 
-<img src="./assets/metadata_llm.png" alt="view llm traces" width="800"/>
+<figure align="center">
+  <img src="./assets/metadata_llm.png" alt="view llm traces" width="800"/>
+  <figcaption><em>Figure 4: Viewing token usage and prompt metadata within a Trace Explorer span</em></figcaption>
+</figure>
 
 ### Configuring OpenLLMetry
-Configuring OpenLLMetry can be accomplished by setting environment variables in your Python code. One reason you may want set a variable is to ensure rate limits are not surpassed. For example, if the GCP Monitoring API receives more requests than the minimum sampling window, the calls will throw an error. One way to circumvent these errors is by enabling metric aggregation with the OTEL_METRIC_EXPORT_INTERVAL
+Configuring OpenLLMetry can be accomplished by setting environment variables in your Python code. One reason you may want set a variable is to ensure rate limits are not surpassed. For example, if the GCP Monitoring API receives more requests than the minimum sampling window, the calls will throw an error. One way to circumvent these errors is by enabling metric aggregation with the OTEL_METRIC_EXPORT_INTERVAL variable.
 
 ```python
 import os
