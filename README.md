@@ -22,7 +22,7 @@
 </div>
 
 ## Introduction
-Setting up observability is crucial for quick troubleshooting, cost optimization, and code efficiency of your applications. This is no different for applications that utilize LLMs. Fortunately, [OpenTelemetry](https://opentelemetry.io/) developed an extension that serves as an observability framework specifically for AI use cases - [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry offers integrations for many observability platforms such as LangFuse, TraceLoop and Google Cloud Observability (Cloud Trace, Cloud Monitoring, Cloud Logging). In this guide, we will learn how to set up OpenLLMetry in your LLM Python application running on Google Cloud Platform.
+Setting up observability is crucial for quick troubleshooting, cost optimization, and code efficiency of your applications. This is no different for applications that utilize LLMs. Fortunately, [OpenTelemetry](https://opentelemetry.io/) developed an extension that serves as an observability framework specifically for AI use cases - [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry offers integrations for many observability platforms such as Langfuse, TraceLoop and Google Cloud Observability (Cloud Trace, Cloud Monitoring, Cloud Logging). In this guide, we will learn how to set up OpenLLMetry in your LLM Python application running on Google Cloud Platform.
 
 Tools:
 * OpenLLMetry
