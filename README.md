@@ -1,4 +1,9 @@
 # OpenLLMetry and Google Cloud Platform Integration Tutorial
+<p align="center">
+  <strong>June 1, 2026</strong> &nbsp;|&nbsp; 
+  <strong>Leila Wolfe</strong> &nbsp;|&nbsp; 
+  <strong>5-minute read</strong>
+</p>
 
 <div align="center">
   <table>
