@@ -41,8 +41,8 @@ You have your Python LLM project managed by uv ready to go. Now we need to step 
 uv add traceloop-sdk
 ```
 
-#### **Step 2**: Install Google Open Telemetry Exporter
-Since we are using Google Cloud Trace, we do not need to set any Traceloop environment variables. We can instead install the Google Open Telemetry Exporter - which OpenLLMetry will automatically detect
+#### **Step 2**: Install Google OpenTelemetry Exporter
+Since we are using Google Cloud Trace, we do not need to set any Traceloop environment variables. We can instead install the Google OpenTelemetry Exporter - which OpenLLMetry will automatically detect
 
 ```bash
 uv add \
@@ -119,7 +119,7 @@ gcloud run jobs execute LLM_APP_JOB_NAME
 <br>
 <br>
 
-If you click on one of the trace spans, you can view the recorded metrics. Figure 4. shows the prompt, token count, and other metadata passed to the gemini model api call.
+If you click on one of the trace spans, you can view the recorded metrics. Figure 4 shows the prompt, token count, and other metadata passed to the gemini model api call.
 
 <figure align="center">
   <img src="./assets/metadata_llm.png" alt="view llm traces" width="800"/>
@@ -184,7 +184,7 @@ if __name__ == "__main__":
 
 ```
 
-### Verifying Success
+### ✅ Verifying Success
 When you run the script, Traceloop will output initialization logs to your terminal, followed by the Gemini response:
 
 ```text
@@ -193,8 +193,13 @@ Traceloop exporting metrics to a custom exporter
 Observability in LLM applications is vital because it allows developers to track non-deterministic model behaviors, monitor token costs, and debug latency bottlenecks in real-time.
 ```
 
-
-## References
+## 📖 Further Reading
+If you're interested in diving deeper, here are some resources on telemetry, observability, and authentication:
+* **[Running OpenTelemetry at Scale: Architecture Patterns for 100s of Services](https://sematext.com/blog/running-opentelemetry-at-scale-architecture-patterns-for-100s-of-services/):** A comprehensive breakdown of OpenTelemetry architecture, context propagation, and span lifecycle management.
+* **[Google Cloud Observability Architecture Guide](https://cloud.google.com/products/observability):** Learn how to architect centralized logging and metric dashboards at enterprise scale across multiple Google Cloud projects.
+* **[An Introduction to Observability for LLM-based applications using OpenTelemetry](https://opentelemetry.io/blog/2024/llm-observability/):** An industry look into why traditional APM tooling fails to capture non-deterministic LLM behaviors and how semantic conventions solve it.
+* **[How Application Default Credentials works](https://docs.cloud.google.com/docs/authentication/application-default-credentials):** Learn how to transition from local `application-default login` workflows to secure, keyless IAM configurations using Workload Identity in production.
+## 📚 References
 * [OpenLLMetry GCP Integration Docs](https://www.traceloop.com/docs/openllmetry/integrations/gcp)
 * [OpenLLMetry Docs](https://github.com/traceloop/openllmetry)
 * [Google Cloud Observability Docs](https://docs.cloud.google.com/stackdriver/docs)
